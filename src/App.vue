@@ -10,7 +10,7 @@
   <button @click="tpWallet">TP Wallet</button>
   <button @click="osk">OSK</button>
   <br><br>
-  <button @click="testTransfer">Test Approve</button>
+  <button @click="testApprove">Test Approve</button>
 </template>
 
 <script>
@@ -34,6 +34,7 @@ export default {
   created() {
     let that = this;
     console.log("created");
+    // 监听钱包信息，钱包会返回provider信息，名字，uuid，icon等
     window.addEventListener(
       "eip6963:announceProvider",
       result => {
@@ -45,11 +46,12 @@ export default {
         else that.oskProvider = result.detail.provider
       }
     );
-
+    // 发送信息
     window.dispatchEvent(new Event("eip6963:requestProvider"))
-    console.log(window.ethereum)
+    // console.log(window.ethereum)
   },
   methods: {
+    // 目前web3.js的库没有办法唤起连接钱包的请求，只能使用ethers.js的库
     async metaMask() {
       console.log("Connect metaMask")
       let provider = new ethers.providers.Web3Provider(this.metaMaskProvider);
@@ -83,7 +85,7 @@ export default {
     },
 
     
-    async testTransfer() {
+    async testApprove() {
       console.log("Test transfer");
       let web3 = this.web3;
       let contract = new web3.eth.Contract(TOKEN_ABI, "0x3351560cbbf41c68d32f4a7c90e66e817e3cc5df");
